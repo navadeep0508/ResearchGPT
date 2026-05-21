@@ -75,7 +75,7 @@ flowchart LR
 ## Deployment Link
 
 - Backend API: [https://researchgpt-249u.onrender.com](https://researchgpt-249u.onrender.com)
-- Frontend: add the hosted Vercel, Netlify, or Render static-site URL here after deployment.
+- Frontend: [https://researchgpt-frontend-d7voct573-navadeep0508s-projects.vercel.app/](https://researchgpt-frontend-d7voct573-navadeep0508s-projects.vercel.app/)
 
 ## API Endpoints
 
