@@ -7,7 +7,8 @@ from app.rag.chunker import (
     chunk_text,
     normalize_text
 )
-from app.rag.vector_store import store_documents
+from app.rag.embedding import generate_embeddings
+from app.rag.vector_store import store_embeddings
 
 from app.auth.dependencies import get_current_user
 from fastapi import Depends
@@ -52,9 +53,10 @@ async def upload(file: UploadFile = File(...),current_user: str = Depends(get_cu
         raise HTTPException(status_code=400, detail="No usable text chunks found in PDF")
 
     try:
-        store_documents(all_chunks)
+        embeddings = generate_embeddings(all_chunks)
+        store_embeddings(all_chunks, embeddings)
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"Could not store document chunks: {exc}") from exc
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
     return {
         "filename": file.filename,

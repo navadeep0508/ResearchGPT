@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from pydantic import BaseModel
+from app.rag.embedding import generate_query_embedding
 from app.rag.vector_store import search_documents
 from app.services.llm_service import generate_ans
 
@@ -27,7 +28,8 @@ class ChatRequest(BaseModel):
 @router.post("/chat")
 async def chat(request: ChatRequest, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     try:
-        result = search_documents(request.question)
+        query_embedding = generate_query_embedding(request.question)
+        result = search_documents(query_embedding)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
