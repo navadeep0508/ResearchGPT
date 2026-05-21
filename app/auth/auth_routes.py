@@ -1,4 +1,4 @@
-from fastapi import APIRouter,HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 
 from app.auth.schemas import (
@@ -18,25 +18,23 @@ from app.db.models import User
 router = APIRouter()
 
 def get_db():
-    db=SessionLocal()
+    db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
 
 @router.post("/register")
-def register(user:UserCreate):
-    db:Session=SessionLocal()
-
-    existing_user=db.query(User).filter(User.username==user.username).first()
+def register(user: UserCreate, db: Session = Depends(get_db)):
+    existing_user = db.query(User).filter(User.username == user.username).first()
 
     if existing_user:
         raise HTTPException(
             status_code=400,
             detail="Username already exists"
         )
-    hashed_psw=hash_password(user.password)
-    new_user=User(
+    hashed_psw = hash_password(user.password)
+    new_user = User(
         username=user.username,
         password=hashed_psw
     )
@@ -48,16 +46,12 @@ def register(user:UserCreate):
     return {"message": "User created successfully"}
 
 @router.post("/login")
-def login(user: UserLogin):
-
-    db: Session = SessionLocal()
-
+def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(
         User.username == user.username
     ).first()
 
     if not db_user:
-
         raise HTTPException(
             status_code=401,
             detail="Invalid username"
@@ -67,7 +61,6 @@ def login(user: UserLogin):
         user.password,
         db_user.password
     ):
-
         raise HTTPException(
             status_code=401,
             detail="Invalid password"

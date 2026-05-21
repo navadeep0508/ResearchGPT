@@ -1,16 +1,22 @@
-import os
 from openai import OpenAI
 from app.core.config import HF_TOKEN
 from app.core.config import HF_MODEL
 
+# Fallback to a dummy key if HF_TOKEN is empty/None to avoid crashing on import
 client = OpenAI(
     base_url="https://router.huggingface.co/v1",
-    api_key=os.environ["HF_TOKEN"],
+    api_key=HF_TOKEN or "dummy_key",
 )
 
 
 def generate_ans(question, context):
-    context="\n\n".join(context)
+    # Only join context if it is passed as a list/iterable of strings
+    if isinstance(context, list):
+        if not context:
+            return "I could not find the answer in the document."
+        context = "\n\n".join(context)
+    if not context:
+        return "I could not find the answer in the document."
     context = context[:4000]
 
     prompt = f"""
@@ -31,6 +37,8 @@ def generate_ans(question, context):
      """
 
     try:
+        if not HF_TOKEN:
+            return "Error: HF_TOKEN is not configured."
 
         completion = client.chat.completions.create(
             model=HF_MODEL,

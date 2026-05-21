@@ -52,9 +52,7 @@ def chunk_text(text: str):
 
     chunks = text_splitter.split_text(text)
 
-    clean_chunks(chunks)
-
-    return chunks
+    return clean_chunks(chunks)
 
 def normalize_text(text):
 
