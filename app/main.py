@@ -3,6 +3,11 @@ from app.core.config import APP_NAME
 from app.api.routes.chat import router as chat_router
 from app.api.routes.upload import router as upload_router
 from app.auth.auth_routes import router as auth_router
+from app.db.database import engine
+from app.db.models import Base
+
+
+Base.metadata.create_all(bind=engine)
 
 
 app=FastAPI(title=APP_NAME)
