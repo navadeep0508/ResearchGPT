@@ -19,4 +19,3 @@ SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key")
 if SECRET_KEY:
     SECRET_KEY = SECRET_KEY.strip('"').strip("'")
 UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
-CHROMA_DIR = os.getenv("CHROMA_DIR", "chroma_db")

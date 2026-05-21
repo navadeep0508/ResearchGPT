@@ -1,4 +1,4 @@
-from sqlalchemy import Column,Integer,String
+from sqlalchemy import Column,Integer,String,JSON,Text
 from app.db.database import Base
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
@@ -32,3 +32,17 @@ class ChatHistory(Base):
     )
 
     user = relationship("User")
+
+
+class DocumentChunk(Base):
+    __tablename__ = "document_chunks"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    document = Column(Text)
+
+    embedding = Column(JSON)

@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 COPY . .
 
-RUN mkdir -p /app/uploads /app/chroma_db
+RUN mkdir -p /app/uploads
 
 EXPOSE 8000
 
